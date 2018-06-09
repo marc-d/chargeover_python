@@ -22,17 +22,16 @@ def convert(input):
 
     if isinstance(input, dict):
         return {convert(key): convert(value) 
-                for key, value in input.iteritems()}
+                for key, value in input.items()}
     elif isinstance(input, list):
         return [convert(element) for element in input]
-    elif isinstance(input, unicode):
+    elif isinstance(input, dict):
         return input.encode('utf-8')
     else:
         return input
 
 class ChargeOverConnectionError(Exception):
     """ Connection errors thrown by ChargeOver 
-
     Typically this will be an unexpected HTTP response code. Note that
     very exceptional HTTP responses may cause an exception in
     httplib2."""
@@ -44,7 +43,6 @@ class ChargeOverConnectionError(Exception):
 class ChargeOver:
 
     """ For interacting with a ChargeOver server in python.
-
     Note that all methods can raise ChargeOverConnectionError, and any
     network communications exceptions raised by httplib2."""
 
@@ -56,7 +54,6 @@ class ChargeOver:
         "Configuration/API and webhooks" in your ChargeOver
         application (endpoint is the API url) when using Basic
         Authentication.
-
         Keyword Arguments: 
         interactive -- boolean, set to true if
         you're calling this in interactive mode.
@@ -212,15 +209,12 @@ class ChargeOver:
 
     def find_by_id(self, target, obj_id, pretty=False):
         """ retrieve an object from ChargeOver
-
         target -- string from the module data specifying what to
         retrieve, e.g. "customer", "invoice". These are constants in
         the module.
-
         Keyword Arguments:
         pretty -- set to True to get pretty printed output, surpresses
         return value. Only usable in interactive mode.
-
         return -- nothing when pretty is set to True in interactive
         mode. Otherwise, a dictionary containing the requested
         data."""
@@ -241,24 +235,19 @@ class ChargeOver:
 
     def find_all(self, target, limit=10, offset=None, pretty=False):
         """ retrieve an object from ChargeOver
-
         target -- string from the module data specifying what to
         retrieve, e.g. "customer", "invoice". These are constants in
         the module.
-
         Keyword Arguments:
         where -- dict for making more intelligent selections. Non null
         values will be turned into http GET options like
         key:EQUALS:value. 'value's set to "NULL" will be assigned as
         key:IS:NULL. see chargeover.com REST API documentation
-
         limit -- limits the number of results returned
         
         offset -- offset into results, useful for pagination
-
         pretty -- set to True to get pretty printed output, surpresses
         return value. Only usable in interactive mode.
-
         return -- nothing when pretty is set to True in interactive
         mode. Otherwise, a list of dictionaries containing the
         requested data."""
@@ -277,24 +266,18 @@ class ChargeOver:
 
     def find(self, target, where, limit=10, offset=None, pretty=False):
         """ retrieve an object from ChargeOver
-
         target -- string from the module data specifying what to
         retrieve, e.g. "customer", "invoice". These are constants in
         the module.
-
         Keyword Arguments:
         where -- dict for making more intelligent selections. Non null
         values will be turned into http GET options like
         key:EQUALS:value. 'value's set to "NULL" will be assigned as
         key:IS:NULL. see chargeover.com REST API documentation
-
         limit -- limits the number of results returned
-
         offset -- offset into results, useful for pagination
-
         pretty -- set to True to get pretty printed output, surpresses
         return value. Only usable in interactive mode.
-
         return -- nothing when pretty is set to True in interactive
         mode. Otherwise, a list of dictionaries containing the
         requested data."""
@@ -316,20 +299,17 @@ class ChargeOver:
 
     def create(self, target, data, pretty=False):
         """ Add a new record to ChargeOver
-
         target -- string from class data (see get() for details)
         data -- object specific dictionary
-
         Keyword Arguments:
         pretty -- set to True to get pretty printed output, surpresses
         return value. Only usable in interactive mode.
-
         return -- success - id of new object, failure - None
         """
         if(self._interactive and target not in self._options):
-            print "Invalid option " + target + ". Use one of:"
+            print ("Invalid option ") + target + ". Use one of:"
             for opt in options:
-                print opt
+                print (opt)
             return
 
         self._submit(target, data)
@@ -348,22 +328,20 @@ class ChargeOver:
 
     def update(self, target, obj_id, data, pretty=False):
         """ Update a ChargeOver record
-
         target -- string from class data (see get() for details)
         obj_id -- object id to modify
         data -- object specific dictionary
         
         pretty -- set to True to get pretty printed output, surpresses
         return value. Only usable in interactive mode.
-
         return -- on success, returns id of updated object. On
         failure, returns None.
         """
 
         if(self._interactive and target not in self._options):
-            print "Invalid option " + target + ". Use one of:"
+            print ("Invalid option ") + target + ". Use one of:"
             for opt in options:
-                print opt
+                print (opt)
             return
 
         self._submit(target, data, obj_id)
